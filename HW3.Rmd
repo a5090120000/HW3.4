@@ -1,0 +1,171 @@
+#NBA 2014-2015球季 各隊分析
+
+library(SportsAnalytics)
+NBA1415<-fetch_NBAPlayerStatistics("14-15")
+
+##各隊最辛苦的球員
+###計算依據為出戰分鐘數最多的球員
+
+
+TotalMinutesPlayedOutput<-NULL for(team in unique(NBA1415$Team)){ selectTeam<-subset(NBA1415,Team==team) TotalMinutesPlayedOutput<-rbind(TotalMinutesPlayedOutput, selectTeam[ order(selectTeam$TotalMinutesPlayed,decreasing = T)[1], c("Name","Team","TotalMinutesPlayed")]) } library(knitr)
+
+kable(TotalMinutesPlayedOutput[order(-TotalMinutesPlayedOutput$TotalMinutesPlayed),], digit=2)
+
+### 圖表
+
+|   |Team |Name             | TotalMinutesPlayed|
+|:--|:----|:----------------|------------------:|
+|11 |HOU  |James Harden     |               2979|
+|18 |MIN  |Andrew Wiggins   |               2971|
+|25 |POR  |Damian Lillard   |               2928|
+|13 |LAC  |Chris Paul       |               2860|
+|30 |WAS  |John Wall        |               2841|
+|24 |PHO  |Eric Bledsoe     |               2799|
+|3  |BRO  |Joe Johnson      |               2787|
+|6  |CLE  |Kyrie Irving     |               2735|
+|7  |DAL  |Monta Ellis      |               2698|
+|19 |NOR  |Tyreke Evans     |               2695|
+|15 |MEM  |Marc Gasol       |               2690|
+|5  |CHI  |Pau Gasol        |               2682|
+|26 |SAC  |Ben Mclemore     |               2674|
+|8  |DEN  |Ty Lawson        |               2668|
+|16 |MIA  |Goran Dragic     |               2641|
+|29 |UTA  |Gordon Hayward   |               2618|
+|10 |GSW  |Stephen Curry    |               2613|
+|9  |DET  |Ke Caldwell-pope |               2591|
+|22 |ORL  |Victor Oladipo   |               2572|
+|17 |MIL  |G Antetokounmpo  |               2542|
+|2  |BOS  |Avery Bradley    |               2427|
+|28 |TOR  |Kyle Lowry       |               2422|
+|1  |ATL  |Kyle Korver      |               2418|
+|12 |IND  |Solomon Hill     |               2380|
+|4  |CHA  |Gerald Henderson |               2323|
+|23 |PHI  |Nerlens Noel     |               2311|
+|27 |SAN  |Danny Green      |               2311|
+|21 |OKL  |Russel Westbrook |               2302|
+|14 |LAL  |Wesley Johnson   |               2244|
+|20 |NYK  |Shane Larkin     |               1864|
+
+##各隊得分王
+###計算依據為總得分最多的球員
+TotalPointsOutput<-NULL for(team in unique(NBA1415$Team)){ selectTeam<-subset(NBA1415,Team==team) TotalPointsOutput<-rbind(TotalPointsOutput, selectTeam[ order(selectTeam$TotalPoints,decreasing = T)[1], c("Name","Team","TotalPoints")]) } library(knitr)
+
+kable(TotalPointsOutput[order(-TotalPointsOutput$TotalPoints),], digit=2)
+
+###圖表
+
+|   |Team |Name             | TotalPoints|
+|:--|:----|:----------------|-----------:|
+|11 |HOU  |James Harden     |        2217|
+|10 |GSW  |Stephen Curry    |        1900|
+|21 |OKL  |Russel Westbrook |        1886|
+|6  |CLE  |Lebron James     |        1740|
+|25 |POR  |Damian Lillard   |        1720|
+|19 |NOR  |Anthony Davis    |        1656|
+|13 |LAC  |Chris Paul       |        1564|
+|7  |DAL  |Monta Ellis      |        1513|
+|29 |UTA  |Gordon Hayward   |        1463|
+|5  |CHI  |Pau Gasol        |        1446|
+|26 |SAC  |Rudy Gay         |        1432|
+|22 |ORL  |Nikola Vucevic   |        1428|
+|15 |MEM  |Marc Gasol       |        1413|
+|18 |MIN  |Andrew Wiggins   |        1387|
+|30 |WAS  |John Wall        |        1385|
+|24 |PHO  |Eric Bledsoe     |        1377|
+|16 |MIA  |Dwyane Wade      |        1331|
+|28 |TOR  |Kyle Lowry       |        1244|
+|3  |BRO  |Brook Lopez      |        1236|
+|1  |ATL  |Paul Millsap     |        1218|
+|8  |DEN  |Ty Lawson        |        1143|
+|9  |DET  |Andre Drummond   |        1130|
+|2  |BOS  |Isaiah Thomas    |        1101|
+|4  |CHA  |Al Jefferson     |        1080|
+|27 |SAN  |Tim Duncan       |        1070|
+|17 |MIL  |Khris Middleton  |        1055|
+|20 |NYK  |Carmelo Anthony  |         966|
+|12 |IND  |C.j. Miles       |         942|
+|23 |PHI  |Robert Covington |         927|
+|14 |LAL  |Jordan Hill      |         841|
+
+
+##各隊最有效率的球員
+###依據總得分除以出戰分鐘數
+Maxefficiency<-aggregate(TotalPoints/TotalMinutesPlayed~Name,NBA1415,max) NBA1415Maxefficiency<-merge(NBA1415,Maxefficiency) output<-NBA1415Maxefficiency[order(NBA1415Maxefficiency$'TotalPoints/TotalMinutesPlayed',decreasing = T), c("Team","Name","TotalPoints/TotalMinutesPlayed")] library(knitr)
+
+outputs<-NULL for(team in unique(output$Team)){ selectTeam<-subset(output,Team==team) outputs<-rbind(outputs, selectTeam[ order(selectTeam$'TotalPoints/TotalMinutesPlayed',decreasing = T)[1], c("Name","Team","TotalPoints/TotalMinutesPlayed")]) } library(knitr) kable(outputs, digits=2)
+
+###圖表
+
+|    |Name             |Team | TotalPoints/TotalMinutesPlayed|
+|:---|:----------------|:----|------------------------------:|
+|412 |Russel Westbrook |OKL  |                           0.82|
+|199 |James Harden     |HOU  |                           0.74|
+|436 |Stephen Curry    |GSW  |                           0.73|
+|110 |Demarcus Cousins |SAC  |                           0.71|
+|303 |Lebron James     |CLE  |                           0.70|
+|67  |Carmelo Anthony  |NYK  |                           0.68|
+|133 |Dwyane Wade      |MIA  |                           0.67|
+|30  |Anthony Davis    |NOR  |                           0.67|
+|473 |Tyrus Thomas     |MEM  |                           0.67|
+|294 |Lamarcu Aldridge |POR  |                           0.66|
+|284 |Kobe Bryant      |LAL  |                           0.65|
+|184 |Isaiah Thomas    |BOS  |                           0.64|
+|45  |Blake Griffin    |LAC  |                           0.62|
+|307 |Louis Williams   |TOR  |                           0.62|
+|160 |Gerald Green     |PHO  |                           0.61|
+|279 |Kevin Martin     |MIN  |                           0.60|
+|73  |Charl Villanueva |DAL  |                           0.59|
+|115 |Derrick Rose     |CHI  |                           0.59|
+|57  |Brook Lopez      |BRO  |                           0.59|
+|378 |Paul George      |IND  |                           0.58|
+|459 |Tony Wroten      |PHI  |                           0.57|
+|362 |Nikola Vucevic   |ORL  |                           0.56|
+|167 |Gordon Hayward   |UTA  |                           0.56|
+|205 |Jannero Pargo    |CHA  |                           0.55|
+|52  |Brandon Jennings |DET  |                           0.54|
+|221 |Jeff Teague      |ATL  |                           0.52|
+|267 |Kawhi Leonard    |SAN  |                           0.52|
+|94  |Danilo Gallinari |DEN  |                           0.52|
+|148 |Ersan Ilyasova   |MIL  |                           0.51|
+|246 |John Wall        |WAS  |                           0.49|
+
+##各隊三分球最準的球員
+###依據三分命中數除以三分出手數
+Maxthree<-aggregate(ThreesMade/ThreesAttempted~Name,NBA1415,max) NBA1415Maxthree<-merge(NBA1415,Maxthree) outputthree<-NBA1415Maxthree[order(NBA1415Maxthree$'ThreesMade/ThreesAttempted',decreasing = T), c("Team","Name","ThreesMade/ThreesAttempted")] library(knitr)
+
+outputthrees<-NULL for(team in unique(outputthree$Team)){ selectTeam<-subset(outputthree,Team==team) outputthrees<-rbind(outputthrees, selectTeam[ order(selectTeam$'ThreesMade/ThreesAttempted',decreasing = T)[1], c("Name","Team","ThreesMade/ThreesAttempted")]) } library(knitr) kable(outputthrees, digits=2)
+
+###圖表
+
+|    |Name             |Team | ThreesMade/ThreesAttempted|
+|:---|:----------------|:----|--------------------------:|
+|70  |Cody Zeller      |CHA  |                       1.00|
+|205 |John Henson      |MIL  |                       1.00|
+|50  |Bruno Caboclo    |TOR  |                       0.67|
+|114 |Dwight Buycks    |LAL  |                       0.64|
+|412 |Victor Claver    |POR  |                       0.55|
+|267 |Luke Babbitt     |NOR  |                       0.51|
+|89  |David Stockton   |SAC  |                       0.50|
+|115 |Dwight Howard    |HOU  |                       0.50|
+|119 |Earl Barron      |PHO  |                       0.50|
+|169 |Jamaal Franklin  |DEN  |                       0.50|
+|260 |Lester Hudson    |LAC  |                       0.50|
+|247 |Kyle Korver      |ATL  |                       0.49|
+|384 |Tayshaun Prince  |DET  |                       0.46|
+|323 |Pau Gasol        |CHI  |                       0.46|
+|265 |Luigi Datome     |BOS  |                       0.45|
+|378 |Stephen Curry    |GSW  |                       0.44|
+|27  |Anthony Morrow   |OKL  |                       0.43|
+|368 |Shannon Brown    |MIA  |                       0.43|
+|397 |Tony Parker      |SAN  |                       0.43|
+|343 |Richar Jefferson |DAL  |                       0.43|
+|251 |Kyrie Irving     |CLE  |                       0.42|
+|219 |Jose Calderon    |NYK  |                       0.42|
+|41  |Bradley Beal     |WAS  |                       0.41|
+|324 |Paul George      |IND  |                       0.41|
+|155 |Hollis Thompson  |PHI  |                       0.40|
+|74  |Courtney Lee     |MEM  |                       0.40|
+|192 |Jeremy Evans     |UTA  |                       0.40|
+|61  |Channing Frye    |ORL  |                       0.39|
+|365 |Shabazz Muhammad |MIN  |                       0.39|
+|97  |Deron Williams   |BRO  |                       0.37|
